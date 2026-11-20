@@ -399,6 +399,13 @@ public:
   void resetActiveDmPath();
   /** LVGL: persist tab index and run light per-screen hooks. */
   void onLvTabChanged(int tab_index);
+  // [wadamesh-remote] begin — test hooks for src/remote_test/ (WADAMESH_REMOTE_TEST only)
+#if defined(WADAMESH_REMOTE_TEST)
+  void remoteKey(uint16_t cp);                        // feed a key through the hardware-key path
+  bool remoteSelectTab(int idx);                      // switch bottom tab (0..count-1)
+  void remoteShotSetBuffer(void* buf, int w, int h);  // arm/disarm the screenshot mirror
+#endif
+  // [wadamesh-remote] end
   void appendDiag(const char* message) override;
   TouchUiScreen touchScreen() const { return _touch_screen; }
   void enterThread(bool channel_mode, int idx);

@@ -89760,3 +89760,27 @@ static void docAuditFocus() {
 }
 #endif
 #endif  // DOC_CAPTURE
+
+// [wadamesh-remote] begin — hooks for src/remote_test/ (WADAMESH_REMOTE_TEST only).
+// Kept at EOF so upstream rebases never touch them; see docs/REMOTE_TEST.md.
+#if defined(WADAMESH_REMOTE_TEST)
+void UITask::remoteKey(uint16_t cp) {
+  if (g_lv.keyboard) handleHwKey(static_cast<int>(cp));
+}
+
+bool UITask::remoteSelectTab(int idx) {
+  if (!g_lv.tabview) return false;
+  lv_obj_t* content = lv_tabview_get_content(g_lv.tabview);
+  const int count = content ? static_cast<int>(lv_obj_get_child_cnt(content)) : 0;
+  if (idx < 0 || idx >= count) return false;
+  goToTab(idx);
+  return true;
+}
+
+void UITask::remoteShotSetBuffer(void* buf, int w, int h) {
+  g_shot_w   = w;
+  g_shot_h   = h;
+  g_shot_buf = static_cast<lv_color_t*>(buf);
+}
+#endif
+// [wadamesh-remote] end

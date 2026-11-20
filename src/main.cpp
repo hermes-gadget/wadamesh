@@ -214,6 +214,9 @@ static uint32_t _atoi(const char* sp) {
 /* GLOBAL OBJECTS */
 #ifdef DISPLAY_CLASS
   #include "UITask.h"
+  #if defined(WADAMESH_REMOTE_TEST)
+    #include "remote_test/RemoteTest.h"   // [wadamesh-remote]
+  #endif
   UITask ui_task(&board, &serial_interface);
 #endif
 
@@ -1831,6 +1834,9 @@ void setup() {
 #ifdef DISPLAY_CLASS
   ui_task.begin(disp, &sensors, the_mesh.getNodePrefs());  // still want to pass this in as dependency, as prefs might be moved
   Serial.println("[BOOT] ui ready");
+  #if defined(WADAMESH_REMOTE_TEST)
+    remote_test::begin(&ui_task, &the_mesh);   // [wadamesh-remote] serial control surface
+  #endif
 #if defined(TLORA_PAGER) && defined(MULTI_TRANSPORT_COMPANION)
   pagerLogInternalHeap("after UI init");
 #endif
@@ -1865,6 +1871,9 @@ void loop() {
     uint32_t _uidt = millis() - _ui0;
     if (_uidt >= 200) stallLog((g_ui_stall_max >= 150 && g_ui_stall_tag[0]) ? g_ui_stall_tag : "ui:other", _uidt);
   }
+#endif
+#if defined(WADAMESH_REMOTE_TEST)
+  remote_test::loop();   // [wadamesh-remote] serial commands + tap/type jobs
 #endif
 #ifdef MULTI_TRANSPORT_COMPANION
 #ifdef DISPLAY_CLASS
