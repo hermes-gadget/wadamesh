@@ -6577,6 +6577,9 @@ void MyMesh::loop() {
     // companion parsing — but only when the first byte looks like a command
     // letter (a-z, A-Z). App binary frames use command bytes 1–62; 32–62 are
     // printable, so we must not treat them as console or we break USB app connection.
+    // [wadamesh-remote] the remote-test build owns text lines (src/remote_test/),
+    // so it disables this intercept to keep command framing deterministic.
+#if !defined(WADAMESH_REMOTE_TEST)
 #if defined(ESP32)
     if (Serial.available() > 0) {
       int first = Serial.peek();
@@ -6595,6 +6598,7 @@ void MyMesh::loop() {
       }
     }
 #endif
+#endif  // !WADAMESH_REMOTE_TEST
     // Always process companion frames in the same loop so TCP/BLE clients cannot
     // be starved by plain-text console traffic on USB Serial.
     checkSerialInterface();

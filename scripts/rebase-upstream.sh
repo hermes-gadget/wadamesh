@@ -34,6 +34,7 @@ check() {
 check src/main.cpp "[wadamesh-remote]"
 check src/ui-touch/UITask.h "[wadamesh-remote]"
 check src/ui-touch/UITask.cpp "[wadamesh-remote]"
+check src/MyMesh.cpp "[wadamesh-remote]"
 check src/remote_test/RemoteTest.cpp "namespace remote_test"
 
 if [[ "$status" -ne 0 ]]; then

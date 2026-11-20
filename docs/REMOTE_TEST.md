@@ -89,13 +89,17 @@ installed, otherwise writes a binary PPM.
 ## Upstream touch points (keep these tiny)
 
 The fork is designed to rebase onto `ALLFATHER-BV/wadamesh` with no manual
-conflict resolution. Only three upstream files change, each marked with
+conflict resolution. Only four upstream files change, each marked with
 `[wadamesh-remote]` fences:
 
 1. `src/main.cpp` — one include, one `remote_test::begin()` after
    `ui_task.begin()`, one `remote_test::loop()` in `loop()`.
 2. `src/ui-touch/UITask.h` — three declarations in the public section.
 3. `src/ui-touch/UITask.cpp` — three shim definitions appended at EOF.
+4. `src/MyMesh.cpp` — the plain-text console intercept is compiled out in this
+   build (one `#if !defined(WADAMESH_REMOTE_TEST)` fence) so the controller
+   owns text lines deterministically, while companion frames still reach
+   `checkSerialInterface()`.
 
 `platformio.ini` gets one extra `[env:...]` block at the end. Everything else
 is new files under `src/remote_test/`.
